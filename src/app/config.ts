@@ -11,7 +11,7 @@ export let CONFIG = {
     RESPONSE_MODE: 'id_token',
     STATE: '',
     MS_GRAPH_URI: 'https://graph.microsoft.com/',
-    REDIRECT_URI : 'http://localhost:4200',
+    REDIRECT_URI : 'http://localhost:4200/home',
     POST_LOGOUT_REDIRECT : 'https://localhost:44389',
     MSGRAPH_BETA_API: 'https://graph.microsoft.com/beta/',
     MSGRAPH_v1_API: 'https://graph.microsoft.com/v1.0/',

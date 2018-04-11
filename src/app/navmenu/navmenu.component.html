@@ -38,5 +38,6 @@
 
 <ng-template #profileBlock>
   <p>Hello, {{user}}</p>
+  <button (click)="getToken()" class="btn btn-danger navbar-btn login-btn">Get Token</button>
   <button (click)="logout()" class="btn btn-danger navbar-btn login-btn">Logout</button>
 </ng-template>

@@ -26,4 +26,8 @@ export class NavmenuComponent {
       return this.authService.getCurrentLogin().name;
   }
 
+  getToken(): void {
+      this.authService.getToken();
+  }
+
 }
