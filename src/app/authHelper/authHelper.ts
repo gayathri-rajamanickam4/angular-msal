@@ -14,23 +14,26 @@ const CONFIG = C.Settings;
 export class AuthHelper {
   public access_token = null;
 
-  app: any;
+  public app: Msal.UserAgentApplication = null;
   public user;
   public isAuthenticated = false;
 
   constructor() {
     const logger = new Msal.Logger(this.loggerCallback, { level: Msal.LogLevel.Verbose, correlationId: '12345' });
-    this.app = new Msal.UserAgentApplication(CONFIG.CLIENT_ID,  CONFIG.AUTHORITY,  (errorDesc, token, error, tokenType) => {
-      // This function is called after loginRedirect and acquireTokenRedirect. Use tokenType to determine context. 
-      // For loginRedirect, tokenType = "id_token". For acquireTokenRedirect, tokenType:"access_token".
-    if (token) {
-        console.log('loginRedirect- Success');
-      } else {
-        console.log('Error during login:\n' + error);
-        console.log('Error Description of login error:', errorDesc);
-      }
-  }, { logger: logger, cacheLocation: 'localStorage',
-    redirectUri: CONFIG.REDIRECT_URI});
+    this.app = new Msal.UserAgentApplication(CONFIG.CLIENT_ID,  CONFIG.AUTHORITY, this.authCallback
+  //      (errorDesc, token, error, tokenType) => {
+  //     // This function is called after loginRedirect and acquireTokenRedirect. Use tokenType to determine context. 
+  //     // For loginRedirect, tokenType = "id_token". For acquireTokenRedirect, tokenType:"access_token".
+  //   if (token) {
+  //       console.log('loginRedirect- Success');
+  //     } else {
+  //       console.log('Error during login:\n' + error);
+  //       console.log('Error Description of login error:', errorDesc);
+  //     }
+  // }
+  , { logger: logger, cacheLocation: 'localStorage',
+    redirectUri: CONFIG.REDIRECT_URI,
+    navigateToLoginRequestUrl: false});
     // this.app = new Msal.UserAgentApplication(
     //   CONFIG.CLIENT_ID,
     //   null,
@@ -43,7 +46,7 @@ export class AuthHelper {
     //     console.log('Callback for login');
     //     this.access_token = token;
     //   });
-     this.app.redirectUri = CONFIG.REDIRECT_URI;
+   //  this.app.redirectUri = CONFIG.REDIRECT_URI;
   }
 
    public loggerCallback(logLevel, message, piiLoggingEnabled) {
@@ -120,7 +123,16 @@ export class AuthHelper {
     const user = this.app.getUser();
     return user;
   }
-public getToken() {
+
+  getIdToken() {
+       return this.app.getUser().idToken;
+
+  }
+  public getAccessToken() {
+    return this.app.acquireTokenSilent(CONFIG.SCOPES);
+   }
+
+  public assignAccessToken() {
     return this.app.acquireTokenSilent(CONFIG.SCOPES).then(
       accessToken => {
         this.access_token = accessToken;

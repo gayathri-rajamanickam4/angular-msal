@@ -8,6 +8,11 @@ import { AuthHelper } from '../authHelper/authHelper';
 })
 export class NavmenuComponent {
 
+    accessToken;
+    IdToken;
+    IdTokenExp;
+    IdTokenIssuedAt;
+
   constructor(private  authService: AuthHelper) { }
 
   login(): void {
@@ -26,8 +31,22 @@ export class NavmenuComponent {
       return this.authService.getCurrentLogin().name;
   }
 
-  getToken(): void {
-      this.authService.getToken();
+  getAccessToken(): void {
+    this.authService.getAccessToken().then(
+        accessToken => {
+            this.accessToken  = accessToken;
+          console.log('ACCESS TOKEN: \n ' + this.accessToken);
+        },
+        acquireTokenSilentError => {
+          console.log('acquireTokenSilent- Error:\n' + acquireTokenSilentError);
+        }
+        );
   }
+
+  getIdToken(): void {
+    this.IdToken = this.authService.getIdToken();
+    this.IdTokenExp = new Date(this.IdToken.exp * 1000);
+    this.IdTokenIssuedAt = new Date(this.IdToken.iat * 1000);
+}
 
 }
